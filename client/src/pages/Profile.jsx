@@ -1,12 +1,7 @@
 import { useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { app } from "../firebase";
+import { useRef, useState, useEffect } from "react";
+import {getStorage, ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
+import {app} from "../firebase";
 
 export default function Profile() {
   const { currentUser } = useSelector((state) => state.user);
@@ -16,57 +11,57 @@ export default function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
 
-  console.log(formData);
-  console.log(filePerc);
-  console.log(fileUploadError);
-
   useEffect(() => {
-    if (file) {
-      handleFileUpload(file);
-    }
-  }, [file]);
+    if (file) hanldeFileUpload(file)
+  }, [file])
 
-  const handleFileUpload = (file) => {
+
+  const hanldeFileUpload = (file) => {
     const storage = getStorage(app);
-    const fileName = new Date().getTime() + file.name;
+    const fileName = new Date().getTime() + "_" + file.name;
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setFilePerc(Math.round(progress));
-      },
-      (error) => {
-        setFileUploadError(true);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-          setFormData({ ...formData, avatar: downloadUrl });
-        });
-      }
+    uploadTask.on('state_changed', (snapshot) => {
+      const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      setFilePerc(progress);
+    },
+    (error) => {
+      setFileUploadError(true);
+    },
+    () => {
+      getDownloadURL(uploadTask.snapshot.ref).then(
+        (downloadURL) => {
+          setFormData({...formData, avatar: downloadURL});
+        }
+      )
+    }
     );
-  };
+  }
+
 
   return (
     <div className="max-w-lg mx-auto p-5 border shadow-xl mt-20">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
       <form className="flex flex-col gap-5" encType="multipart/form-data">
-        <input
-          onChange={(e) => setFile(e.target.files[0])}
-          hidden
-          type="file"
-          ref={fileRef}
-          accept="image/*"
-        />
+        <input onChange={(e) => setFile(e.target.files[0])} type="file" ref={fileRef} hidden accept="image/*"/>
         <img
           onClick={() => fileRef.current.click()}
-          src={currentUser.avatar}
-          className="rounded-full w-30 h-30 object-cover cursor-pointer self-center mb-5"
+          src={formData.avatar || currentUser.avatar}
+          className="rounded-full w-30 h-30 object-cover cursor-pointer self-center"
           alt="profile"
         />
+        <p className="self-center mb-3">
+          {
+            fileUploadError
+           ? <span className="font-sm text-red-700">Error image upload (image must be less then 2 mb)</span> 
+           : filePerc > 0 && filePerc < 100
+           ? <span className="font-sm text-gray-500">{`Uploading ${filePerc}%`}</span>
+           : filePerc === 100 && !fileUploadError
+           ? <span className="font-sm text-green-700">Image uploaded successfully</span>
+           : ""
+          }
+        </p>
 
         <input
           type="text"
