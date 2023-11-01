@@ -33,7 +33,7 @@ export default function Header() {
             </li>
           </Link>
 
-          <Link to="sign-in">
+          <Link to="/profile">
             {currentUser ? (
               <img
                 src={currentUser.avatar}
