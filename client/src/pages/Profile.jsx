@@ -45,6 +45,12 @@ export default function Profile() {
     );
   };
 
+  console.log(formData);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
   return (
     <div className="max-w-lg mx-auto p-5 border shadow-xl mt-20">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -84,6 +90,8 @@ export default function Profile() {
           id="username"
           className="border rounded-lg p-3"
           placeholder="username"
+          defaultValue={currentUser.username}
+          onChange={handleChange}
         />
         <input
           type="text"
@@ -91,13 +99,16 @@ export default function Profile() {
           id="email"
           className="border rounded-lg p-3"
           placeholder="email"
+          defaultValue={currentUser.email}
+          onChange={handleChange}
         />
         <input
-          type="text"
+          type="password"
           name="password"
           id="password"
           className="border rounded-lg p-3"
           placeholder="password"
+          onChange={handleChange}
         />
         <button className="bg-slate-700 text-white p-3 uppercase rounded-lg hover:scale-95 hover:opacity-90">
           Update
