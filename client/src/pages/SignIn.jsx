@@ -14,6 +14,8 @@ export default function SignIn() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  console.log(loading);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,

@@ -24,10 +24,10 @@ export default function Profile() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (file) hanldeFileUpload(file);
+    if (file) handleFileUpload(file);
   }, [file]);
 
-  const hanldeFileUpload = (file) => {
+  const handleFileUpload = (file) => {
     const storage = getStorage(app);
     const fileName = new Date().getTime() + "_" + file.name;
     const storageRef = ref(storage, fileName);
