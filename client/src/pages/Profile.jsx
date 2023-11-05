@@ -20,8 +20,14 @@ export default function Profile() {
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    username: currentUser.username,
+    email: currentUser.email,
+    password: "",
+    avatar: currentUser.avatar,
+  });
   const dispatch = useDispatch();
+  const [updateUserSuccess, setUpdateUserSuccess] = useState(false);
 
   useEffect(() => {
     if (file) handleFileUpload(file);
@@ -58,21 +64,24 @@ export default function Profile() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const userId = currentUser._id;
     try {
       dispatch(updateStart());
-      const res = await fetch(`api/user/update/${currentUser._id}`, {
-        method: "POST",
+      const res = await fetch(`/api/user/update/${userId}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
-      const data = res.json();
+      const data = await res.json();
       if (data.success === false) {
         dispatch(updateFailure(data.message));
         return;
       }
+
       dispatch(updateSuccess(data));
+      setUpdateUserSuccess(true);
     } catch (error) {
       dispatch(updateFailure(error.message));
     }
@@ -158,6 +167,10 @@ export default function Profile() {
           Sign out
         </span>
       </div>
+      <p className="text-green-700 font-mono mt-4">
+        {updateUserSuccess ? "Updated Success!" : ""}
+      </p>
+      <p className="text-red-700 font-mono mt-4">{error ? error : ""}</p>
     </div>
   );
 }
