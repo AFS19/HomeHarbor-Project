@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 const PORT = process.env.PORT || 3000;
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
+import listingRouter from "./routes/listing.route.js";
 import cookieParser from "cookie-parser";
 
 dotenv.config();
@@ -25,6 +26,7 @@ app.listen(PORT, () =>
 
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
+app.use("api/listing", listingRouter);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
