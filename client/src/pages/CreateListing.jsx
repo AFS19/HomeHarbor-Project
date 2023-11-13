@@ -65,6 +65,7 @@ export default function CreateListing() {
               <label htmlFor="offer">Offer</label>
             </div>
           </div>
+
           <div className="flex flex-wrap gap-6">
             <div className="flex items-center gap-2">
               <input
@@ -73,7 +74,7 @@ export default function CreateListing() {
                 min="1"
                 max="10"
                 required
-                className="p-3 border border-gray-300 rounded-lg"
+                className="p-3 w-20 border border-gray-300 rounded-lg"
               />
               <p>Beds</p>
             </div>
@@ -84,7 +85,7 @@ export default function CreateListing() {
                 min="1"
                 max="10"
                 required
-                className="p-3 border border-gray-300 rounded-lg"
+                className="p-3 w-20 border border-gray-300 rounded-lg"
               />
               <p>Baths</p>
             </div>
@@ -95,7 +96,7 @@ export default function CreateListing() {
                 min="50"
                 max="10000000"
                 required
-                className="p-3 border border-gray-300 rounded-lg"
+                className="p-3 w-28 border border-gray-300 rounded-lg"
               />
               <div className="flex flex-col items-center">
                 <p>Regular price</p>
@@ -109,7 +110,7 @@ export default function CreateListing() {
                 min="0"
                 max="10000000"
                 required
-                className="p-3 border border-gray-300 rounded-lg"
+                className="p-3 w-28 border border-gray-300 rounded-lg"
               />
               <div className="flex flex-col items-center">
                 <p>Discounted price</p>
@@ -118,62 +119,6 @@ export default function CreateListing() {
               </div>
             </div>
           </div>
-          {/* <div className="flex flex-wrap gap-6">
-            <div className="flex items-center gap-2">
-              <input
-                type="number"
-                name="bedrooms"
-                id="bedrooms"
-                min="1"
-                max="20"
-                required
-                className="p-3 border border-gray-300 rounded-lg"
-              />
-              <label htmlFor="bedrooms">Beds</label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="number"
-                name="bathrooms"
-                id="bathrooms"
-                min="1"
-                max="20"
-                required
-                className="p-3 border border-gray-300 rounded-lg"
-              />
-              <label htmlFor="bathrooms">Baths</label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="number"
-                name="regularPrice"
-                id="regularPrice"
-                min="1"
-                max="20"
-                required
-                className="p-3 border border-gray-300 rounded-lg"
-              />
-              <div className="">
-                <label htmlFor="regularPrice">Regular price</label>
-                <span className="text-xs">($ / month)</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <input
-                type="number"
-                name="discountedPrice"
-                id="discountedPrice"
-                min="1"
-                max="20"
-                required
-                className="p-3 border border-gray-300 rounded-lg"
-              />
-              <div className="">
-                <label htmlFor="discountedPrice">Discounted price</label>
-                <span className="text-xs">($ / month)</span>
-              </div>
-            </div>
-          </div> */}
         </div>
         <div className="flex flex-col flex-1 gap-4">
           <p className="font-semibold">
