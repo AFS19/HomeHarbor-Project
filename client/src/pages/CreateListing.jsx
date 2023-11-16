@@ -12,51 +12,57 @@ export default function CreateListing() {
   const [formData, setFormData] = useState({
     imagesUrls: [],
   });
+  const [imageUploadError, setImageUploadError] = useState(false);
 
-  console.log(formData);
+  const storeImage = async (file) => {
+    return new Promise((resolve, reject) => {
+      const storage = getStorage(app);
+      const fileName = new Date().getTime() + "_" + file.name;
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(progress);
+        },
+        (error) => {
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
+  };
 
   const handleImageUpload = (e) => {
     e.preventDefault();
 
-    if (files.length > 0 && files.length < 7) {
+    if (files.length > 0 && files.length + formData.imagesUrls.length < 7) {
       const promises = [];
 
       for (let i = 0; i < files.length; i++) {
         promises.push(storeImage(files[i]));
       }
 
-      Promise.all(promises).then((urls) => {
-        setFormData({
-          ...formData,
-          imagesUrls: formData.imagesUrls.concat(urls),
+      Promise.all(promises)
+        .then((urls) => {
+          setFormData({
+            ...formData,
+            imagesUrls: formData.imagesUrls.concat(urls),
+          });
+          setImageUploadError(false);
+        })
+        .catch((err) => {
+          setImageUploadError("Image upload failed (2 mb max per image)!");
         });
-      });
+    } else {
+      setImageUploadError("You can only upload 6 images per listing!");
     }
-
-    const storeImage = async (file) => {
-      return new Promise((resolve, reject) => {
-        const storage = getStorage(app);
-        const fileName = new Date().getTime() + "_" + file.name;
-        const storageRef = ref(storage, fileName);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log(progress);
-          },
-          (error) => {
-            reject(error);
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              resolve(downloadURL);
-            });
-          }
-        );
-      });
-    };
   };
 
   return (
@@ -205,6 +211,22 @@ export default function CreateListing() {
               Upload
             </button>
           </div>
+          <p className="text-red-700 text-sm">
+            {imageUploadError && imageUploadError}
+          </p>
+          {formData.imagesUrls.length > 0 &&
+            formData.imagesUrls.map((url) => (
+              <div key={url} className="flex justify-between">
+                <img
+                  src={url}
+                  alt="listing image"
+                  className="w-20 h-30 object-contain rounded-lg"
+                />
+                <button className="text-red-700 uppercase rounded-lg font-semibold cursor-pointer hover:scale-95">
+                  Delete
+                </button>
+              </div>
+            ))}
           <button className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:scale-95 hover:opacity-90 disabled:opacity-80">
             Create listing
           </button>
