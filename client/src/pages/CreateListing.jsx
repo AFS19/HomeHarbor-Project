@@ -13,6 +13,7 @@ export default function CreateListing() {
     imagesUrls: [],
   });
   const [imageUploadError, setImageUploadError] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const storeImage = async (file) => {
     return new Promise((resolve, reject) => {
@@ -43,6 +44,9 @@ export default function CreateListing() {
     e.preventDefault();
 
     if (files.length > 0 && files.length + formData.imagesUrls.length < 7) {
+      setUploading(true);
+      setImageUploadError(false);
+
       const promises = [];
 
       for (let i = 0; i < files.length; i++) {
@@ -56,13 +60,23 @@ export default function CreateListing() {
             imagesUrls: formData.imagesUrls.concat(urls),
           });
           setImageUploadError(false);
+          setUploading(false);
         })
         .catch((err) => {
           setImageUploadError("Image upload failed (2 mb max per image)!");
+          setUploading(false);
         });
     } else {
       setImageUploadError("You can only upload 6 images per listing!");
+      setUploading(false);
     }
+  };
+
+  const handleDeleteImage = (index) => {
+    setFormData({
+      ...formData,
+      imagesUrls: formData.imagesUrls.filter((_, i) => i !== index),
+    });
   };
 
   return (
@@ -206,23 +220,28 @@ export default function CreateListing() {
             <button
               onClick={handleImageUpload}
               type="button"
+              disabled={uploading}
               className="p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80"
             >
-              Upload
+              {uploading ? "Uploading..." : "Upload"}
             </button>
           </div>
           <p className="text-red-700 text-sm">
             {imageUploadError && imageUploadError}
           </p>
           {formData.imagesUrls.length > 0 &&
-            formData.imagesUrls.map((url) => (
+            formData.imagesUrls.map((url, index) => (
               <div key={url} className="flex justify-between">
                 <img
                   src={url}
                   alt="listing image"
                   className="w-20 h-30 object-contain rounded-lg"
                 />
-                <button className="text-red-700 uppercase rounded-lg font-semibold cursor-pointer hover:scale-95">
+                <button
+                  type="button"
+                  onClick={() => handleDeleteImage(index)}
+                  className="text-red-700 uppercase rounded-lg font-semibold cursor-pointer hover:scale-95"
+                >
                   Delete
                 </button>
               </div>
