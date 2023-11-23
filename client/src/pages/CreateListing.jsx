@@ -32,8 +32,6 @@ export default function CreateListing() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  console.log(formData);
-
   const storeImage = async (file) => {
     return new Promise((resolve, reject) => {
       const storage = getStorage(app);
