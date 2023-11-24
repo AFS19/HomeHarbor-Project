@@ -35,6 +35,9 @@ export default function Profile() {
   });
   const dispatch = useDispatch();
   const [updateUserSuccess, setUpdateUserSuccess] = useState(false);
+  const [showListingError, setShowListingsError] = useState(false);
+  const [showListingLoading, setShowListingLoading] = useState(false);
+  const [userListings, setUserListings] = useState([]);
 
   useEffect(() => {
     if (file) handleFileUpload(file);
@@ -124,6 +127,28 @@ export default function Profile() {
       dispatch(signOutSuccess(data));
     } catch (error) {
       dispatch(signOUtFailure(error.message));
+    }
+  };
+
+  const handleShowListings = async () => {
+    try {
+      setShowListingsError(false);
+      setShowListingLoading(true);
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        setShowListingsError(data.message);
+        setShowListingLoading(false);
+        return;
+      } else {
+        setTimeout(() => {
+          setShowListingLoading(false);
+          setUserListings(data);
+        }, 2000);
+      }
+    } catch (err) {
+      setShowListingsError(err.message);
+      setShowListingLoading(false);
     }
   };
 
@@ -223,6 +248,57 @@ export default function Profile() {
         {updateUserSuccess ? "Updated Success!" : ""}
       </p>
       <p className="text-red-700 font-mono mt-4">{error ? error : ""}</p>
+      <button
+        onClick={handleShowListings}
+        className="text-green-700 w-full font-normal"
+      >
+        {showListingLoading ? "Loading..." : "Show Listings"}
+      </button>
+      {showListingError && (
+        <p className="text-red-700 font-mono mt-4">{showListingError}</p>
+      )}
+
+      {userListings && userListings.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <h1 className="text-center mt-7 text-2xl font-semibold">
+            Your Listings
+          </h1>
+
+          {userListings.map((listing, index) => (
+            <div
+              key={index}
+              className="flex justify-between items-center border p-3 shadow-md rounded-lg gap-4"
+            >
+              <Link to={`/listing/${listing._id}`}>
+                <img
+                  src={listing.imageUrls}
+                  alt="listing cover"
+                  className="h-14 w-14 object-contain"
+                />
+              </Link>
+              <Link
+                to={`/listing/${listing._id}`}
+                className="text-slate-700 font-semibold flex-1 truncate hover:underline"
+              >
+                <p>{listing.name}</p>
+              </Link>
+
+              <div>
+                <Link to={`/listing/destroy/${listing._id}`}>
+                  <button className="text-red-700 font-medium uppercase hover:underline mr-2">
+                    Delete
+                  </button>
+                </Link>
+                <Link to={`/listing/update/${listing._id}`}>
+                  <button className="text-green-700 font-medium uppercase hover:underline">
+                    Edit
+                  </button>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
