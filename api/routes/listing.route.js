@@ -9,6 +9,6 @@ import { verifyToken } from "../utils/verifyUser.js";
 
 router.post("/create", verifyToken, create);
 router.delete("/delete/:id", verifyToken, deleteListing);
-router.put("/update/:id", verifyToken, updateListing);
+router.post("/update/:id", verifyToken, updateListing);
 
 export default router;
