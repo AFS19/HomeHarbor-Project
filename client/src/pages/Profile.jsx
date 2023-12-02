@@ -155,19 +155,20 @@ export default function Profile() {
   const handleDeleteListing = async (listingId) => {
     try {
       const res = await fetch(`/api/listing/delete/${listingId}`, {
-        method: 'DELETE',
-      }
-      );
+        method: "DELETE",
+      });
       const data = res.json();
       if (data.success === false) {
         console.log(data.message);
         return;
       }
-      setUserListings((prev) => prev.filter((listing) => listing._id !== listingId));
+      setUserListings((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
     } catch (error) {
       return;
     }
-  }
+  };
 
   return (
     <div className="max-w-lg mx-auto p-5 border shadow-xl mt-20">
@@ -301,12 +302,17 @@ export default function Profile() {
               </Link>
 
               <div>
-                  <button onClick={() => handleDeleteListing(listing._id)} className="text-red-700 font-medium uppercase hover:underline mr-2">
-                    Delete
-                  </button>
+                <button
+                  onClick={() => handleDeleteListing(listing._id)}
+                  className="text-red-700 font-medium uppercase hover:underline mr-2"
+                >
+                  Delete
+                </button>
+                <Link to={`/update-listing/${listing._id}`}>
                   <button className="text-green-700 font-medium uppercase hover:underline">
                     Edit
                   </button>
+                </Link>
               </div>
             </div>
           ))}
