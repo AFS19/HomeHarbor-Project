@@ -4,7 +4,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
 import "swiper/css/bundle";
-import { FaMapMarkerAlt, FaShare } from "react-icons/fa";
+import {
+  FaBath,
+  FaBed,
+  FaChair,
+  FaMapMarkerAlt,
+  FaParking,
+  FaShare,
+} from "react-icons/fa";
 
 export default function Listing() {
   const params = useParams();
@@ -100,6 +107,38 @@ export default function Listing() {
                 </p>
               )}
             </div>
+            <p className="text-slate-800">
+              <span className="font-bold text-xl text-black">
+                Description -{" "}
+              </span>
+              {listing.description}
+            </p>
+
+            <ul className="flex gap-4 sm:gap-8 flex-wrap text-green-900 font-semibold text-sm">
+              <li className="flex gap-2 items-center whitespace-nowrap">
+                <FaBed className="text-xl" />
+                {listing.bedrooms > 1
+                  ? `${listing.bedrooms} beds`
+                  : `${listing.bedrooms} bed`}
+              </li>
+
+              <li className="flex gap-2 whitespace-nowrap">
+                <FaBath className="text-base" />
+                {listing.bathrooms > 1
+                  ? `${listing.bathrooms} bath`
+                  : `${listing.bathrooms} baths`}
+              </li>
+
+              <li className="flex gap-2 items-center whitespace-nowrap">
+                <FaParking className="text-xl" />
+                {listing.parking ? "Parking spot" : "No parking"}
+              </li>
+
+              <li className="flex gap-2 items-center whitespace-nowrap">
+                <FaChair className="text-xl" />
+                {listing.furnished ? "Furnished" : "Unfurnished"}
+              </li>
+            </ul>
           </div>
         </>
       )}
