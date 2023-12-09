@@ -66,46 +66,53 @@ export const get = async (req, res, next) => {
 
 export const getListings = async (req, res, next) => {
   try {
-    const limit = parseInt(req.query.limit) || 6;
-    const startIndex = parseInt(req.query.startIndex) || 0;
-    let offer = req.query.offer;
-    if (offer === undefined || offer === "false") {
-      offer = { $in: [true, false] };
-    }
-
-    let furnished = req.query.furnished;
-    if (furnished === undefined || furnished === "false") {
-      furnished = { $in: [true, false] };
-    }
-
-    let parking = req.query.parking;
-    if (parking === undefined || parking === "false") {
-      parking = { $in: [true, false] };
-    }
-
-    let type = req.query.type;
-    if (type === undefined || type === "all") {
-      type = { $in: ["sell", "rent"] };
-    }
-
-    const searchTerm = req.query.searchTerm || "";
-    const sort = req.query.sort || "createdAt";
-    const order = req.query.order || "desc";
-
-    const listings = await Listing.find({
-      name: { $regex: searchTerm, $options: "i" },
+    const {
+      limit = 6,
+      startIndex = 0,
       offer,
       furnished,
       parking,
       type,
-    })
-      .sort({ [sort]: order })
-      .limit(limit)
-      .skip(startIndex);
+      searchTerm = "",
+      sort = "createdAt",
+      order = "desc",
+    } = req.query;
 
-    if (!listings) {
-      return next(errorHandler(404, "Listing not found!"));
+    const queryOptions = {
+      offer:
+        offer === undefined || offer === "false"
+          ? { $in: [true, false] }
+          : offer === "true",
+      furnished:
+        furnished === undefined || furnished === "false"
+          ? { $in: [true, false] }
+          : furnished === "true",
+      parking:
+        parking === undefined || parking === "false"
+          ? { $in: [true, false] }
+          : parking === "true",
+      type: type === undefined || type === 'all' ? type : { $in: ["sell", "rent"] },
+    };
+
+    let filter = {
+      name: { $regex: searchTerm, $options: "i" },
+      ...queryOptions,
+    };
+
+    // If no query parameters are provided, return all listings
+    if (Object.keys(req.query).length === 0) {
+      filter = {}; // Empty filter to get all listings
     }
+
+    const listings = await Listing.find(filter)
+      .sort({ [sort]: order })
+      .limit(parseInt(limit))
+      .skip(parseInt(startIndex));
+
+    if (listings.length === 0) {
+      return next(errorHandler(404, "Listings not found!"));
+    }
+
     res.status(200).json(listings);
   } catch (error) {
     next(error);
