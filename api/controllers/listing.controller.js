@@ -91,18 +91,14 @@ export const getListings = async (req, res, next) => {
         parking === undefined || parking === "false"
           ? { $in: [true, false] }
           : parking === "true",
-      type: type === undefined || type === 'all' ? type : { $in: ["sell", "rent"] },
+      type:
+        type === undefined || type === "all" ? { $in: ["sell", "rent"] } : type,
     };
 
     let filter = {
       name: { $regex: searchTerm, $options: "i" },
       ...queryOptions,
     };
-
-    // If no query parameters are provided, return all listings
-    if (Object.keys(req.query).length === 0) {
-      filter = {}; // Empty filter to get all listings
-    }
 
     const listings = await Listing.find(filter)
       .sort({ [sort]: order })
