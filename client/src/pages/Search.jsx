@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ListingItem } from "../components/ListingItem";
 
 export default function Search() {
   const [sidebarData, setSidebarData] = useState({
@@ -15,7 +16,6 @@ export default function Search() {
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
 
-  console.log(listings);
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromURL = urlParams.get("searchTerm");
@@ -49,10 +49,12 @@ export default function Search() {
     const fetchListings = async () => {
       setLoading(true);
       const searchQuery = urlParams.toString();
-      const res = await fetch(`api/listing/get?${searchQuery}`);
+      const res = await fetch(`/api/listing/get?${searchQuery}`);
       const data = await res.json();
-      setListings(data);
-      setLoading(false);
+      setTimeout(() => {
+        setListings(data);
+        setLoading(false);
+      }, 1000);
     };
     fetchListings();
   }, [location.search]);
@@ -127,7 +129,7 @@ export default function Search() {
               id="searchTerm"
               placeholder="Search..."
               className="border rounded-lg p-3 w-full"
-              value={sidebarData.searchTerm}
+              defaultValue={sidebarData.searchTerm}
               onChange={handleChange}
             />
           </div>
@@ -220,10 +222,27 @@ export default function Search() {
         </form>
       </div>
 
-      <div className="">
+      <div className="flex-1">
         <h1 className="text-3xl text-slate-700 font-semibold p-3 mt-3">
           Listing results:{" "}
         </h1>
+        <div className="flex flex-wrap gap-4 p-7">
+          {!loading && listings.length === 0 && (
+            <p className="text-xl text-slate-800 font-semibold">
+              No listings found!
+            </p>
+          )}
+          {loading && (
+            <p className="text-3xl text-slate-800 text-center w-full">
+              Loading...
+            </p>
+          )}
+          {!loading &&
+            listings.length > 0 &&
+            listings.map((listing, index) => (
+              <ListingItem key={index} listing={listing} />
+            ))}
+        </div>
       </div>
     </div>
   );

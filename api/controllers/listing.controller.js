@@ -105,10 +105,6 @@ export const getListings = async (req, res, next) => {
       .limit(parseInt(limit))
       .skip(parseInt(startIndex));
 
-    if (listings.length === 0) {
-      return next(errorHandler(404, "Listings not found!"));
-    }
-
     res.status(200).json(listings);
   } catch (error) {
     next(error);

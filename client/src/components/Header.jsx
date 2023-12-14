@@ -8,6 +8,14 @@ export default function Header() {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    // if (searchTermFromUrl) {
+    setSearchTerm(searchTermFromUrl);
+    // }
+  }, [location.search]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const urlParams = new URLSearchParams(location.search);
@@ -15,14 +23,6 @@ export default function Header() {
     const urlQueries = urlParams.toString();
     navigate(`/search?${urlQueries}`);
   };
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
-    const searchTermFromUrl = urlParams.get("searchTerm");
-    if (searchTermFromUrl) {
-      setSearchTerm(searchTermFromUrl);
-    }
-  }, [location.search]);
 
   return (
     <header className="bg-slate-200 shadow-md w-full">
@@ -39,7 +39,7 @@ export default function Header() {
         >
           <input
             type="text"
-            value={searchTerm}
+            defaultValue={searchTerm}
             placeholder="Search..."
             className="bg-transparent focus:outline-none w-24 sm:w-64"
             onChange={(e) => setSearchTerm(e.target.value)}
