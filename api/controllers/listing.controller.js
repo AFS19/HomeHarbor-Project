@@ -92,7 +92,7 @@ export const getListings = async (req, res, next) => {
           ? { $in: [true, false] }
           : parking === "true",
       type:
-        type === undefined || type === "all" ? { $in: ["sell", "rent"] } : type,
+        type === undefined || type === "all" ? { $in: ["sale", "rent"] } : type,
     };
 
     let filter = {

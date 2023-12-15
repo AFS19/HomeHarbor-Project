@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export const ListingItem = ({ listing }) => {
   return (
-    <div className="w-[30%] sm:[w-330px] bg-white shadow-xl hover:shadow-2xl transition-shadow duration-200 overflow-hidden rounded-lg">
+    <div className="w-full sm:w-[330px] bg-white shadow-xl hover:shadow-2xl transition-shadow duration-200 overflow-hidden rounded-lg">
       <Link to={`/listing/${listing._id}`}>
         <img
           src={listing.imageUrls[0]}
