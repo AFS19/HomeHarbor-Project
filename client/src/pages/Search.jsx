@@ -56,10 +56,8 @@ export default function Search() {
       setTimeout(() => {
         if (data.length > 5) {
           setShowMoreListings(true);
-          console.log("listing mor than 5", data.length);
         } else {
           setShowMoreListings(false);
-          console.log("listing less than 5", data.length);
         }
         setListings(data);
         setLoading(false);
@@ -131,7 +129,6 @@ export default function Search() {
     const data = await res.json();
     if (data.length < 6) {
       setShowMoreListings(false);
-      console.log(showMoreListings);
     }
     setListings([...listings, ...data]);
   };
