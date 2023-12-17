@@ -29,6 +29,11 @@ export default function Header() {
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
         <Link to="/">
           <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
+            <img
+              src="../marketingminor-svgrepo-com.svg"
+              alt="Home Harbor"
+              className="w-6 h-6"
+            />
             <span className="text-slate-500">Home</span>
             <span className="text-slate-700">Harbor</span>
           </h1>
