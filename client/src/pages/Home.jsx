@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
 import "swiper/css/bundle";
-import { ListingItem } from "../components/ListingItem";
+import ListingResult from "../components/ListingResult";
 
 export default function Home() {
   const [offerListings, setOfferListings] = useState([]);
@@ -15,8 +15,6 @@ export default function Home() {
   useEffect(() => {
     fetchOfferListings();
   }, []);
-
-  console.log(saleListings);
 
   const fetchOfferListings = async () => {
     try {
@@ -85,7 +83,7 @@ export default function Home() {
             <SwiperSlide key={index}>
               <div
                 style={{
-                  background: `green center no-repeat`,
+                  background: `url(${listing.imageUrls[0]}) center no-repeat`,
                   backgroundSize: "cover",
                 }}
                 className="h-[450px] md:h-[600px]"
@@ -97,70 +95,31 @@ export default function Home() {
       {/* listing results for offer, sale and rent */}
       <div className="max-w-6xl mx-auto p-3 flex flex-col gap-8 my-10">
         {/* offer */}
-        {offerListings && offerListings.length > 0 && (
-          <div className="">
-            <div className="my-3">
-              <h2 className="text-3xl font-semibold text-slate-600">
-                Recent Offers
-              </h2>
-              <Link
-                to={`/search?offer=true`}
-                className="text-sm text-blue-800 hover:underline"
-              >
-                Show more offers
-              </Link>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              {offerListings.map((listing, index) => (
-                <ListingItem listing={listing} key={index} />
-              ))}
-            </div>
-          </div>
-        )}
+        <ListingResult
+          listingType={offerListings}
+          listingTypeLength={offerListings.length}
+          searchQuery="offer=true"
+          title="Recent Offers"
+          showMore="Show more offers"
+        />
 
         {/* sale */}
-        {saleListings && saleListings.length > 0 && (
-          <div className="">
-            <div className="my-3">
-              <h2 className="text-3xl font-semibold text-slate-600">
-                Recent places for Sales
-              </h2>
-              <Link
-                to={`/search?type=sale`}
-                className="text-sm text-blue-800 hover:underline"
-              >
-                Show more places for sales
-              </Link>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              {saleListings.map((listing, index) => (
-                <ListingItem listing={listing} key={index} />
-              ))}
-            </div>
-          </div>
-        )}
+        <ListingResult
+          listingType={saleListings}
+          listingTypeLength={saleListings.length}
+          searchQuery="type=sale"
+          title="Recent places for Sales"
+          showMore="Show more places for Sales"
+        />
 
         {/* rent */}
-        {rentListings && rentListings.length > 0 && (
-          <div className="">
-            <div className="my-3">
-              <h2 className="text-3xl font-semibold text-slate-600">
-                Recent places for Rents
-              </h2>
-              <Link
-                to={`/search?type=rent`}
-                className="text-sm text-blue-800 hover:underline"
-              >
-                Show more places for rents
-              </Link>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              {rentListings.map((listing, index) => (
-                <ListingItem listing={listing} key={index} />
-              ))}
-            </div>
-          </div>
-        )}
+        <ListingResult
+          listingType={rentListings}
+          listingTypeLength={rentListings.length}
+          searchQuery="type=rent"
+          title="Recent places for Rents"
+          showMore="Show more places for Rents"
+        />
       </div>
     </div>
   );
